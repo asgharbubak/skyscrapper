@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Demo Task By Muhammad Asghar Ali</title>
+	<!-- Bootstrap CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
+	<!-- Bootstrap JS Bundle with Popper -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>	
+	<script src="./js/bootstrap.bundle.min.js"></script>
+	<!-- Vue JS files -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/underscore@1.8.3"></script>
+
+</head>
+<body>
+
+<div id="demo-content">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+	    <div class="container-fluid">
+	        <a href="#" class="navbar-brand">Demo Task</a>
+	        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+	            <span class="navbar-toggler-icon"></span>
+	        </button>
+	        <div class="collapse navbar-collapse" id="navbarCollapse">
+	            <div class="navbar-nav">
+	                <a href="index.html" class="nav-item nav-link active">Home</a>
+	            </div>
+	            <div class="navbar-nav ms-auto">
+	                <a href="#" class="nav-item nav-link">Prepared by Muhammad Asghar Ali</a>
+	            </div>
+	        </div>
+	    </div>
+	</nav>
+	<div class="container">
+		<ul class="nav nav-tabs">
+		    <li class="nav-item">
+		        <a href="#home" class="nav-link active" data-bs-toggle="tab" @click="activateTab('home');filterRows();">Home</a>
+		    </li>
+		    <li class="nav-item">
+		        <a href="#classes" class="nav-link" data-bs-toggle="tab" @click="activateTab('classes');filterRows('','http://localhost/demo/jobs/demotask/backend/public/api/classes');">Classes</a>
+		    </li>
+		    <li class="nav-item">
+		        <a href="#subjects" class="nav-link" data-bs-toggle="tab" @click="activateTab('subjects');filterRows('','http://localhost/demo/jobs/demotask/backend/public/api/subjects');">Subjects</a>
+		    </li>
+		    <li class="nav-item">
+		        <a href="#addschedule" class="nav-link" data-bs-toggle="tab" @click="activateTab('addschedule');loadPageData('teachers','http://localhost/demo/jobs/demotask/backend/public/api/teachers');loadPageData('subjects','http://localhost/demo/jobs/demotask/backend/public/api/subjects');loadPageData('classes','http://localhost/demo/jobs/demotask/backend/public/api/classes');">Manage Schedule</a>
+		    </li>
+		    <li class="nav-item">
+		        <a href="#addsubjects" class="nav-link" data-bs-toggle="tab">Add Subjects</a>
+		    </li>
+		    <li class="nav-item">
+		        <a href="#addclasses" class="nav-link" data-bs-toggle="tab">Add Classes</a>
+		    </li>
+		    <li class="nav-item">
+		        <a href="#addteachers" class="nav-link" data-bs-toggle="tab">Add Teachers</a>
+		    </li>
+		</ul>
+		<div class="tab-content">
+		    <div class="tab-pane fade show active" id="home">
+		    	<div class="row">
+		    		<div class="col-12">
+				        <p>List of Teacher...</p>			        
+						<table class="table">
+						    <thead>
+						        <tr>
+						            <th>#</th>
+						            <th>Teacher Name</th>
+						            <th>Qualifiation</th>
+						            <th>Options</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <tr v-for="(row, index) in response">
+						            <td>{{ (index+1) }}</td>
+						            <td><a href="#" class="tab-link" @click="activateTab('schedule');filterRows('','http://localhost/demo/jobs/demotask/backend/public/api/schedule?id='+row.id);">{{row.name}}</a></td>
+						            <td>{{row.qualification}}</td>
+						            <td><button @click="deleteRow(row.id)" style="color:red;">Delete</button></td>
+						        </tr>               
+						    </tbody>
+						</table>
+		    		</div>
+		    	</div>
+		    </div>
+		    <div class="tab-pane fade" id="classes">
+		    	<div class="row">
+		    		<div class="col-12">
+				        <p>List of classes...</p>			        
+						<table class="table">
+						    <thead>
+						        <tr>
+						            <th>#</th>
+						            <th>Name</th>
+						            <th>Options</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <tr v-for="(row, index) in response">
+						            <td>{{ (index+1) }}</td>
+						            <td>{{row.name}}</td>
+						            <td><button @click="deleteRow(row.id,'http://localhost/demo/jobs/demotask/backend/public/api/classes','http://localhost/demo/jobs/demotask/backend/public/api/classes')" style="color:red;">Delete</button></td>
+						        </tr>               
+						    </tbody>
+						</table>
+		    		</div>
+		    	</div>
+
+		    </div>
+		    <div class="tab-pane fade" id="subjects">
+		    	<div class="row">
+		    		<div class="col-12">
+				        <p>List of subjects...</p>			        
+						<table class="table">
+						    <thead>
+						        <tr>
+						            <th>#</th>
+						            <th>Name</th>
+						            <th>Options</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <tr v-for="(row, index) in response">
+						            <td>{{ (index+1) }}</td>
+						            <td>{{row.name}}</td>
+						            <td><button @click="deleteRow(row.id,'http://localhost/demo/jobs/demotask/backend/public/api/subjects','http://localhost/demo/jobs/demotask/backend/public/api/subjects')" style="color:red;">Delete</button></td>
+						        </tr>               
+						    </tbody>
+						</table>
+		    		</div>
+		    	</div>
+
+		    </div>
+
+		    <div class="tab-pane fade" id="schedule">
+		    	<div class="row">
+		    		<div class="col-12">
+				        <p>Teacher Schedule...</p>			        
+						<table class="table">
+						    <thead>
+						        <tr>
+						            <th>Class</th>
+						            <th>Subject</th>
+						            <th>Timing</th>
+						            <th>Duration</th>
+						            <th>Option</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <tr v-for="(row, index) in response">
+						            <td v-show="row.is_break > 0" colspan="4"style="text-align: center;font-weight: bold;">Break & Teacher Meeting</td>
+						            <td v-show="row.is_break < 1">{{row.class_name}}</td>
+						            <td v-show="row.is_break < 1">{{row.subject_name}}</td>
+						            <td v-show="row.is_break < 1">{{row.formatted_start_time}} - {{row.formatted_end_time}}</td>
+						            <td v-show="row.is_break < 1">{{row.duration}} Minutes</td>
+						            <td><button @click="deleteRow(row.id,'http://localhost/demo/jobs/demotask/backend/public/api/schedule','http://localhost/demo/jobs/demotask/backend/public/api/schedule')" style="color:red;">Delete</button></td>
+						        </tr>   
+						        <tr>						        	
+						            <td colspan="5"style="text-align: center;font-weight: bold;"> OFF</td>
+						        </tr>            
+						    </tbody>
+						</table>
+		    		</div>
+		    	</div>
+
+		    </div>
+
+
+		    <div class="tab-pane fade" id="addsubjects">
+		        <form id="formAddSubject" ref="formAddSubject" @submit.prevent="addRow('formAddSubject','http://localhost/demo/jobs/demotask/backend/public/api/subjects')">
+			    	<div class="row">
+			    		<div class="col-6">
+					        <label class="form-label" for="inputSubjectName">Subject Name</label>
+					        <input type="text" name="name" class="form-control" id="inputSubjectName" placeholder="Enter Subject Name">
+						</div>
+			    		<div class="col-3 mt-4">
+						    <button type="submit" class="btn btn-primary">Save</button>
+			    		</div>
+			    	</div>
+				</form>
+		    </div>
+		    <div class="tab-pane fade" id="addclasses">
+		        <form id="formAddClass" ref="formAddClass" @submit.prevent="addRow('formAddClass','http://localhost/demo/jobs/demotask/backend/public/api/classes')">
+			    	<div class="row">
+			    		<div class="col-6">
+					        <label class="form-label" for="inputClassName">Class Name</label>
+					        <input type="text" name="name" class="form-control" id="inputClassName" placeholder="Enter Class Name">
+						</div>
+			    		<div class="col-3 mt-4">
+						    <button type="submit" class="btn btn-primary">Save</button>
+			    		</div>
+			    	</div>
+				</form>
+		    </div>
+		    <div class="tab-pane fade" id="addteachers">
+		        <form id="formAddTeacher" ref="formAddTeacher" @submit.prevent="addRow('formAddTeacher')">
+			    	<div class="row">
+			    		<div class="col-4">
+					        <label class="form-label" for="inputClassName">Techer Name</label>
+					        <input type="text" name="name" class="form-control" id="inputClassName" placeholder="Enter Teacher Name">
+						</div>
+			    		<div class="col-4">
+					        <label class="form-label" for="inputClassName">Qualification</label>
+					        <input type="text" name="qualification" class="form-control" id="inputClassName" placeholder="Enter Qualification">
+						</div>
+			    		<div class="col-3 mt-4">
+						    <button type="submit" class="btn btn-primary">Save</button>
+			    		</div>
+			    	</div>
+				</form>
+		    </div>
+		    <div class="tab-pane fade" id="addschedule">
+		        <form id="formAddSchedule" ref="formAddSchedule" @submit.prevent="addRow('formAddSchedule','http://localhost/demo/jobs/demotask/backend/public/api/schedule')">
+			    	<div class="row">
+			    		<div class="col-3">
+					        <label class="form-label" for="inputScheduleType">Type</label>
+					        <select name="is_break" class="form-select" id="inputScheduleType" required>
+	                            <option value="">Select Type</option>
+	                            <option value="0">Working Period</option>
+	                            <option value="1">Break or Meeting</option>
+							</select>
+						</div>
+			    		<div class="col-3">
+					        <label class="form-label" for="inputScheduleTeacherId">Teacher</label>
+					        <select name="teacher_id" class="form-select" id="inputScheduleTeacherId" required>
+	                            <option value="">Select Teacher</option>
+	                            <option v-for="r in pageData.teachers" :value="r.id">{{r.name}}</option>
+							</select>
+						</div>
+			    		<div class="col-3">
+					        <label class="form-label" for="inputScheduleSubjectId">Subject</label>
+					        <select name="subject_id" class="form-select" id="inputScheduleSubjectId">
+	                            <option value="">Select Subject</option>
+	                            <option v-for="r in pageData.subjects" :value="r.id">{{r.name}}</option>
+							</select>
+						</div>
+			    		<div class="col-3">
+					        <label class="form-label" for="inputScheduleClassId">Class</label>
+					        <select name="class_id" class="form-select" id="inputScheduleClassId">
+	                            <option value="">Select Class</option>
+	                            <option v-for="r in pageData.classes" :value="r.id">{{r.name}}</option>
+							</select>
+						</div>
+			    		<div class="col-3">
+					        <label class="form-label" for="inputScheduleStartTime">Start Time</label>
+					        <input type="time" name="start_time" class="form-control" id="inputScheduleStartTime" placeholder="Start Time" required>
+						</div>
+			    		<div class="col-3">
+					        <label class="form-label" for="inputScheduleEndTime">End Time</label>
+					        <input type="time" name="end_time" class="form-control" id="inputScheduleEndTime" placeholder="End Time" required>
+						</div>
+			    		<div class="col-3 mt-4">
+						    <button type="submit" class="btn btn-primary">Save</button>
+			    		</div>
+			    	</div>
+				</form>
+		    </div>
+		</div>
+
+	</div>
+</div>
+
+
+<script type = "text/javascript">
+	var isEmptyString=function (str){
+    	if(str == null || typeof str == 'null' || str == undefined || typeof str == 'undefined' || !str || str.length ===0 || str === ""  || str === "0" || !/[^\s]/.test(str) || /^\s*$/.test(str) || str.toString().replace(/\s/g) ==="" ){
+    		return true;
+    	}
+    	return false;
+    }; 
+    var isNumber=function (str){
+    	if (typeof str == 'number'){ return true;}
+    	if (typeof str == "string" ){
+		  return !isNaN(str) && !isNaN(parseFloat(str));    		
+    	}
+    	return false;
+    };
+    var isNaturalNumber=function (str){
+    	if( !this.isNumber(str)) return false;
+    	if( Number(str) >0) return true;
+    	return false;
+    };
+    var isEmpty=function (data){
+    	if (data == null || data == 'null'){ return true;}
+    	if (data == undefined || data == 'undefined'){ return true;}
+    	if (typeof data == undefined ){ return true;}
+    	if (typeof data == 'number'){ return data === 0;}
+    	if (typeof data == 'string'){ return isEmptyString(data);}
+    	if (typeof data == 'boolean'){ return data === false;}
+    	if (Array.isArray(data)) {return data.length==0;}
+    	if (typeof data == 'object'){ return data.length==0;}
+    	return false;
+    }; 
+    var processForm=function (scope,formId){
+		scope.postData = {};
+		let formData = new FormData(document.getElementById(formId));
+		console.log(formData);
+		// need to convert it before using not with XMLHttpRequest
+		for (let [key, val] of formData.entries()) {
+			Object.assign(scope.postData, {[key]: val})
+		}
+		//add v-models to post data
+		Object.keys(scope.params.entry).forEach((key,idx) => {
+			if(isObject(scope.params.entry[key])){
+				scope.postData[key]=scope.params.entry[key].index;
+			}else{
+				scope.postData[key]=scope.params.entry[key];
+			}
+		});
+    }; 
+
+	///////////////////////////////////////////////////////////////////////
+	///////////////////INITIALIZE THE VIEW APP/////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	var params = {
+		numRows : 0,
+		timeout : 30*1000,
+		interval : 10*1000,
+		textWarning : 'Be Cautious while doing this operation',
+		textError : 'Network malfunction! Please try again after some time...',
+		filter : {},
+		entry : {},
+	};
+
+	var options = {
+		data: {
+			rid: '',
+			response: {},
+			postData: {},
+			pageData: { 'teachers':[],'subjects':[],'classes':[]},
+			params: params,
+			selectedRows: [],
+			filter: {search:''},
+			record: {},	//selected record
+		},
+		methods: {
+			//select row
+			selectRow: function(row){ this.record = row;},
+			//load rows
+			loadPageData: function(fieldName,url='',filter={},config={}){
+				if(isEmpty(url)) return false;
+				var self = this;
+				var api_url = url;
+				axios.get(api_url,config)
+				.then(function (response) {
+					if(response.data.error === true){
+						alert(response);
+					}else{
+						self.pageData[fieldName] = response.data;
+					}
+				})
+				.catch(function (response) {
+					console.log(error);
+				})
+				.then(function(){
+					console.log(self.pageData);
+				});
+			},
+			filterRows: function(formId='',url='',config={}){
+				var self = this;
+				var api_url = isEmpty(url) ? 'http://localhost/demo/jobs/demotask/backend/public/api/teachers' : url;
+				var formId = isEmpty(formId) ? '' : formId;		
+				if(!isEmpty(formId)){
+					let myForm = document.getElementById(formId); 
+					let formData = new FormData(myForm);
+					// need to convert it before using not with XMLHttpRequest
+					for (let [key, val] of formData.entries()) {
+						Object.assign(self.filter, {[key]: val})
+					}
+					//add v-models to post data
+					Object.keys(self.params.filter).forEach((key,idx) => {
+						if(isObject(self.params.filter[key])){
+							self.filter[key]=self.params.filter[key].index;
+						}else{
+							self.filter[key]=scope.params.filter[key];
+						}
+					});
+				}		
+
+				self.formId = formId;
+				// config.params = self.filter;
+				axios.get(api_url,config)
+				.then(function (response) {
+					if(response.data.error === true){
+						alert(response);
+					}else{
+						self.response = response.data;
+					}
+				})
+				.catch(function (response) {
+					console.log(error);
+				})
+				.then(function(){
+					self.processFilterReset();
+				});
+			},
+			addRow: function(formId,url='',config={},reloadUrl='',reloadFormId=''){
+				var self = this;
+				var api_url = isEmpty(url) ? 'http://localhost/demo/jobs/demotask/backend/public/api/teachers' : url;
+				var reloadFormId = isEmpty(reloadFormId) ? 'formFilter' : reloadFormId;				
+				processForm(self,formId);
+				self.formId = formId;
+				self.reloadFormId = reloadFormId;
+				axios.post(api_url,this.postData,config)
+				.then(function (response) {
+					document.getElementById(formId).reset();
+					alert('Save successfully!');
+				})
+				.catch(function (response) {
+					console.log(response);
+				})
+				.then(function(){
+					self.filterRows(self.reloadFormId,reloadUrl);
+				});
+
+			},
+			updateRow: function(formId,url='',config={}){
+				var self = this;
+				var api_url = isEmpty(url) ? 'http://localhost/demo/jobs/demotask/backend/public/api/teachers/' : url;
+				processForm(self,formId);
+				axios.post(api_url,this.postData,config)
+				.then(function (response) {
+					if(response.data.error === true){
+						console.log(response);
+						alert(response.data);
+					}else{
+						alert('Save successfully!');
+					}
+				})
+				.catch(function (response) {
+					console.log(response);
+				})
+				.then(function(){
+				});
+
+			},
+			deleteRow: function(id,url='',reloadUrl=''){							
+				var self = this;
+				var api_url = isEmpty(url) ? 'http://localhost/demo/jobs/demotask/backend/public/api/teachers' : url;
+				axios.delete(api_url+'/'+id)
+				.then(function (response) {
+					if(response.data.error === true){
+						console.log(response);
+						alert(response.data);
+					}else{
+						alert('Save successfully!');
+					}
+				})
+				.catch(function (response) {
+					alert('An error occured!');
+					console.log(response);
+				})
+				.then(function(){
+					self.filterRows('',reloadUrl);
+				});
+			},
+			jsDate: function(dateTime = '', time=false, short=false){
+				const monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+				const monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "June","July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+				if(!isEmpty(dateTime)){
+					let dateTimeParts= dateTime.toString().split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
+					dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
+					const dateObject = new Date(...dateTimeParts); // our Date object
+					if(time==true){
+						var minutes = dateObject.getMinutes();
+						var hours = dateObject.getHours();
+						var ampm = hours >= 12 ? 'PM' : 'AM';
+						hours = hours % 12;
+						hours = hours ? hours : 12; //0=12
+						hours = hours < 12 ? '0'+hours : hours; 
+						minutes = minutes < 10 ? '0'+minutes : minutes; 
+						if(short==true){
+							return dateObject.getDate() + '-'+monthShortNames[dateObject.getMonth()+1] + '-'+dateObject.getFullYear() + ' '+hours+ ':'+minutes+' '+ampm;
+						}else{
+							return dateObject.getDate() + '-'+monthNames[dateObject.getMonth()+1] + '-'+dateObject.getFullYear() + ' '+hours+ ':'+minutes+' '+ampm;
+						}
+					}else{
+						if(short==true){
+							return dateObject.getDate() + '-'+monthShortNames[dateObject.getMonth()+1] + '-'+dateObject.getFullYear();
+						}else{
+							return dateObject.getDate() + '-'+monthNames[dateObject.getMonth()+1] + '-'+dateObject.getFullYear();
+						}
+					}
+				}
+			},  
+			jsDbDate: function(dateTime = '', time=false, short=false){
+				const monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+				const monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "June","July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+				if(!isEmpty(dateTime)){
+					let dateTimeParts= dateTime.toString().split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
+					const dateObject = new Date(...dateTimeParts); // our Date object
+					if(time==true){
+						var minutes = dateObject.getMinutes();
+						var hours = dateObject.getHours();
+						var ampm = hours >= 12 ? 'PM' : 'AM';
+						hours = hours % 12;
+						hours = hours ? hours : 12; //0=12
+						hours = hours < 12 ? '0'+hours : hours; 
+						minutes = minutes < 10 ? '0'+minutes : minutes; 
+						if(short==true){
+							return dateObject.getDate() + '-'+monthShortNames[dateObject.getMonth()-1] + '-'+dateObject.getFullYear() + ' '+hours+ ':'+minutes+' '+ampm;
+						}else{
+							return dateObject.getDate() + '-'+monthNames[dateObject.getMonth()-1] + '-'+dateObject.getFullYear() + ' '+hours+ ':'+minutes+' '+ampm;
+						}
+					}else{
+						if(short==true){
+							return dateObject.getDate() + '-'+monthShortNames[dateObject.getMonth()-1] + '-'+dateObject.getFullYear();
+						}else{
+							return dateObject.getDate() + '-'+monthNames[dateObject.getMonth()-1] + '-'+dateObject.getFullYear();
+						}
+					}
+				}
+			},  
+			processFilterReset: function(){
+				this.showfilterReset=false;
+				Object.keys(this.filter).forEach(key => { if(! isEmpty(this.filter[key])){ this.showfilterReset = true;}});
+			},
+			clearFilter: function(reload=false,formId='',url=''){	
+				var formId = isEmpty(formId) ? 'formFilter' : formId;	
+				document.getElementById(formId).reset();			
+				Object.keys(this.filter).forEach(key => {this.filter[key]='';});
+				this.showfilterReset=false;
+				this.filter={};			
+				if(reload===true){ this.filterRows(formId,url);}
+				this.resetSelect2();
+			},
+			locate: function(url){	window.location.href = url; },
+			activateTab: function(tab){	
+				$(".tab-pane").removeClass("active show");
+				$(".navbar-nav-link").removeClass("active");
+				$("#" + tab).addClass("active show");
+				$("#nav-item-" + tab).addClass("active");
+				$('a[href="#'+ tab +'"]').tab('show');
+			},
+			isEmpty: function(data){ return isEmpty(data);},
+			rand: function(min){
+				return Math.floor(Math.random() * (9999999 - min) ) - Math.floor(Math.random() * 999 ) + Math.floor(Math.random() * (458158745 - min) );
+			},
+			toNumber: function(number){
+				return new Intl.NumberFormat().format(number);
+			},
+			searchRows: _.debounce( function(formId='',url='') {this.filterRows(formId,url);}, 700),
+		},
+		computed: {
+			selectAll: {
+				get: function () {
+					return this.response.rows ? this.selectedRows.length == this.response.rows.length : false;
+				},
+				set: function (value) {
+					var selected = [];
+
+					if (value) {
+						this.response.rows.forEach(function (row) {
+							selected.push(row.mid);
+						});
+					}
+
+					this.selectedRows = selected;
+				}
+			},
+
+		}
+	};
+
+	Vue.config.errorHandler = function (err) {
+		console.log(err.message); // "Oops"
+	};
+
+	var initApp = function(options={}){
+		options.el = '#demo-content';
+		////////////////////////////////////////
+		var app = new Vue(options);
+		////////////////////////////////////////
+		return app;
+	}
+
+	options.mounted = function () {
+		this.filterRows();
+	};
+	var app = initApp(options);  
+</script>
+</body>
+</html>
